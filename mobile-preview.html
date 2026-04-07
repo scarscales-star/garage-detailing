@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Preview — Garage Detailing</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #1a1a1a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      gap: 40px;
+      color: #fff;
+    }
+    .preview-header {
+      text-align: center;
+    }
+    .preview-header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .preview-header p {
+      font-size: 13px;
+      color: #888;
+    }
+    .devices {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 50px;
+      align-items: flex-start;
+    }
+    .device-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .device-label {
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #D62828;
+    }
+    /* Phone shell */
+    .phone {
+      width: 393px;
+      background: #000;
+      border-radius: 52px;
+      padding: 16px;
+      box-shadow: 0 0 0 1px #333, 0 30px 80px rgba(0,0,0,0.8);
+      position: relative;
+    }
+    .phone-notch {
+      width: 120px;
+      height: 34px;
+      background: #000;
+      border-radius: 0 0 24px 24px;
+      margin: 0 auto 10px;
+      position: relative;
+      z-index: 10;
+    }
+    .phone-screen {
+      border-radius: 38px;
+      overflow: hidden;
+      background: #0a0a0a;
+      height: 720px;
+    }
+    .phone-screen iframe {
+      width: 390px;
+      height: 844px;
+      border: none;
+      transform-origin: top left;
+      transform: scale(0.854);
+    }
+    .phone-home-bar {
+      width: 120px;
+      height: 5px;
+      background: #333;
+      border-radius: 3px;
+      margin: 10px auto 0;
+    }
+    /* Tablet shell */
+    .tablet {
+      width: 600px;
+      background: #111;
+      border-radius: 30px;
+      padding: 20px;
+      box-shadow: 0 0 0 1px #333, 0 30px 80px rgba(0,0,0,0.8);
+    }
+    .tablet-screen {
+      border-radius: 18px;
+      overflow: hidden;
+      background: #0a0a0a;
+      height: 700px;
+    }
+    .tablet-screen iframe {
+      width: 768px;
+      height: 1024px;
+      border: none;
+      transform-origin: top left;
+      transform: scale(0.724);
+    }
+    .notes {
+      max-width: 800px;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 28px 32px;
+    }
+    .notes h2 {
+      font-size: 16px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #D62828;
+      margin-bottom: 16px;
+    }
+    .notes ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .notes li {
+      font-size: 13px;
+      color: #aaa;
+      padding-left: 16px;
+      position: relative;
+    }
+    .notes li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: #D62828;
+    }
+    .notes li strong { color: #fff; }
+  </style>
+</head>
+<body>
+
+<div class="preview-header">
+  <h1>Garage Detailing — Mobile Preview</h1>
+  <p>Open in your browser to review the mobile layout. Use this file to identify any layout changes needed.</p>
+</div>
+
+<div class="devices">
+
+  <!-- iPhone 14 -->
+  <div class="device-wrap">
+    <span class="device-label">iPhone 14 (390px)</span>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <iframe src="index.html" title="Mobile preview 390px" loading="lazy"></iframe>
+      </div>
+      <div class="phone-home-bar"></div>
+    </div>
+  </div>
+
+  <!-- iPad Mini -->
+  <div class="device-wrap">
+    <span class="device-label">iPad Mini (768px)</span>
+    <div class="tablet">
+      <div class="tablet-screen">
+        <iframe src="index.html" title="Tablet preview 768px" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="notes">
+  <h2>Mobile Checklist — Things to Review</h2>
+  <ul>
+    <li><strong>Hero title</strong> — Should fit on 2–3 lines, not overflow the screen</li>
+    <li><strong>Nav hamburger</strong> — Tap it to open the mobile slide-out menu</li>
+    <li><strong>Service cards</strong> — Each card should stack full-width on mobile</li>
+    <li><strong>Get a Free Quote button</strong> — Should be easy to tap (44px+ touch target)</li>
+    <li><strong>Form modal</strong> — Steps should be readable, one column on mobile</li>
+    <li><strong>Trust bar</strong> — Icons + text should wrap neatly</li>
+    <li><strong>Footer</strong> — Should stack to single column, links readable</li>
+    <li><strong>Font sizes</strong> — Body text ≥14px for readability</li>
+    <li><strong>Logo</strong> — Should be clearly visible at 44px height in the nav</li>
+    <li><strong>CTA buttons</strong> — Red color should pop on dark backgrounds</li>
+  </ul>
+</div>
+
+</body>
+</html>
