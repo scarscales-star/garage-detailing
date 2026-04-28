@@ -50,9 +50,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const totalSteps = 4;
   let selections = { service: '', timeline: '', referral: '' };
 
+  /* ---- ANALYTICS ---- */
+  function track(key, subkey) {
+    const map = { formOpens:'form_open', submitted:'submit', contactSubmits:'contact_submit' };
+    const event = key === 'callClicks' ? 'call_' + (subkey || 'click') : (map[key] || key);
+    fetch('/api/track', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({event}) }).catch(()=>{});
+  }
+
   function openModal(preselect) {
     if (!modalOverlay) return;
     resetForm();
+    track('formOpens');
     if (preselect) {
       const btn = modalOverlay.querySelector(`.opt-btn[data-val="${preselect}"]`);
       if (btn) {
@@ -135,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (currentStep < totalSteps) {
         currentStep++;
         showStep(currentStep);
+        if (currentStep >= 2) track('step' + currentStep);
       }
     });
   });
@@ -213,27 +222,25 @@ document.addEventListener('DOMContentLoaded', function () {
       const emailEl2 = document.querySelector('#contact-email');
       const vehicleEl = document.querySelector('#contact-vehicle');
 
-      /* Submit to Netlify Forms */
-      const formData = new FormData();
-      formData.append('form-name', 'lead-form');
-      formData.append('name',     nameEl2?.value.trim() || '');
-      formData.append('phone',    phoneEl2?.value.trim() || '');
-      formData.append('email',    emailEl2?.value.trim() || '');
-      formData.append('vehicle',  vehicleEl?.value.trim() || '');
-      formData.append('service',  selections.service || '');
-      formData.append('timeline', selections.timeline || '');
-      formData.append('referral', selections.referral || '');
-
-      fetch('/', { method: 'POST', body: formData })
-        .catch(() => {}); /* fail silently — still show success */
-
-      /* Show success */
-      const bodyEl = document.querySelector('.modal-body');
-      const progressEl = document.querySelector('.modal-progress');
-      const successEl = document.querySelector('.form-success');
-      if (bodyEl) bodyEl.style.display = 'none';
-      if (progressEl) progressEl.style.display = 'none';
-      if (successEl) successEl.classList.add('active');
+      track('submitted');
+      fetch('https://formsubmit.co/ajax/detailing.garage9@gmail.com', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: 'New Lead — Garage Detailing KC',
+          name:     nameEl2?.value.trim() || '',
+          phone:    phoneEl2?.value.trim() || '',
+          email:    emailEl2?.value.trim() || '',
+          vehicle:  vehicleEl?.value.trim() || '',
+          service:  selections.service || '',
+          timeline: selections.timeline || '',
+          referral: selections.referral || '',
+          _honey:   ''
+        })
+      })
+      .then(() => { window.location.href = 'thank-you.html'; })
+      .catch(() => { window.location.href = 'thank-you.html'; });
     });
   }
 
@@ -259,12 +266,28 @@ document.addEventListener('DOMContentLoaded', function () {
     inlineForm.addEventListener('submit', function(e) {
       e.preventDefault();
       const btn = this.querySelector('button[type="submit"]');
-      const origText = btn.textContent;
-      btn.textContent = 'Message Sent!';
-      btn.style.background = '#61CE70';
+      const data = Object.fromEntries(new FormData(this));
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
       btn.disabled = true;
-      this.reset();
-      setTimeout(() => { btn.textContent = origText; btn.style.background = ''; btn.disabled = false; }, 4000);
+
+      fetch('https://formsubmit.co/ajax/detailing.garage9@gmail.com', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: 'New Contact Message — Garage Detailing KC',
+          ...data,
+          _honey: ''
+        })
+      })
+      .then(() => {
+        track('contactSubmits');
+        window.location.href = 'thank-you.html';
+      })
+      .catch(() => {
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        btn.disabled = false;
+      });
     });
   }
 
@@ -281,6 +304,14 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
   document.querySelectorAll('[data-aos]').forEach(el => observer.observe(el));
+
+  /* ---- CLICK-TO-CALL TRACKING ---- */
+  document.querySelectorAll('a[href^="tel:"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
+      track('callClicks', isMobile ? 'mobile' : 'desktop');
+    });
+  });
 
   /* ---- COUNTER ANIMATION ---- */
   function animateCount(el) {

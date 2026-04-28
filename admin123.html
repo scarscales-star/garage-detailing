@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="garage%20detailig.png" />
+  <title>Admin Dashboard — Garage Detailing KC</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #C9A84C;
+      --bg: #0d0d0d;
+      --card: #141414;
+      --border: rgba(255,255,255,0.07);
+      --white: #f0f0f0;
+      --muted: #555;
+      --green: #4caf7d;
+      --red: #e05252;
+    }
+    body { background: var(--bg); color: var(--white); font-family: 'Montserrat', sans-serif; min-height: 100vh; }
+
+    /* HEADER */
+    .header {
+      background: #0a0a0a;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .header-brand {
+      font-family: 'Oswald', sans-serif;
+      font-size: 16px;
+      letter-spacing: 4px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .header-brand span { color: var(--gold); }
+    .badge {
+      background: var(--gold);
+      color: #111;
+      font-size: 9px;
+      letter-spacing: 2px;
+      padding: 3px 8px;
+      font-weight: 700;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .since-label { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
+    .btn-reset {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #888;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      padding: 7px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-reset:hover { border-color: var(--red); color: var(--red); }
+
+    /* MAIN */
+    .main { max-width: 1200px; margin: 0 auto; padding: 36px 24px 80px; }
+
+    /* PAGE TITLE */
+    .page-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* STAT CARDS */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 24px 20px;
+    }
+    .card-icon {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .card-icon.gold { color: var(--gold); }
+    .card-icon.green { color: var(--green); }
+    .card-value {
+      font-family: 'Oswald', sans-serif;
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .card-label { font-size: 11px; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; }
+
+    /* SECTION */
+    .section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 28px 28px 24px;
+      margin-bottom: 16px;
+    }
+    .section-head {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-head i { color: var(--gold); }
+
+    /* FUNNEL */
+    .funnel-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 180px;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .funnel-label {
+      font-size: 12px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .funnel-label i { color: var(--gold); font-size: 11px; width: 14px; }
+    .funnel-label.final { color: var(--green); }
+    .funnel-bar-track {
+      background: rgba(255,255,255,0.04);
+      height: 8px;
+      border-radius: 0;
+      overflow: hidden;
+    }
+    .funnel-bar {
+      height: 100%;
+      background: var(--gold);
+      transition: width 0.8s ease;
+      min-width: 2px;
+    }
+    .funnel-bar.final { background: var(--green); }
+    .funnel-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    .funnel-count { font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: 600; min-width: 30px; text-align: right; }
+    .funnel-pct { font-size: 11px; color: var(--muted); min-width: 36px; text-align: right; }
+    .funnel-drop { font-size: 10px; color: var(--red); letter-spacing: 0.5px; }
+    .funnel-divider {
+      border: none;
+      border-top: 1px dashed rgba(255,255,255,0.05);
+      margin: 6px 0 14px;
+    }
+
+    /* BOTTOM GRID */
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* CALL BARS */
+    .call-row { margin-bottom: 18px; }
+    .call-info {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .call-device { font-size: 12px; color: #aaa; display: flex; align-items: center; gap: 8px; }
+    .call-device i { color: var(--gold); width: 14px; }
+    .call-num { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 600; }
+    .call-track { background: rgba(255,255,255,0.04); height: 6px; }
+    .call-fill { height: 100%; background: var(--gold); transition: width 0.8s ease; min-width: 2px; }
+    .call-total {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .call-total strong { font-family: 'Oswald', sans-serif; font-size: 20px; color: var(--white); }
+
+    /* CONTACT STAT */
+    .big-num { font-family: 'Oswald', sans-serif; font-size: 64px; font-weight: 700; color: var(--gold); line-height: 1; margin-bottom: 8px; }
+    .big-sub { font-size: 11px; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
+
+    /* NOTE */
+    .note {
+      margin-top: 28px;
+      font-size: 11px;
+      color: #3a3a3a;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* EMPTY STATE */
+    .empty {
+      padding: 40px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .empty i { display: block; font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+
+    /* LAST UPDATED */
+    .last-updated { font-size: 10px; color: #333; margin-top: 6px; }
+
+    @media (max-width: 900px) {
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .funnel-row { grid-template-columns: 140px 1fr 120px; }
+    }
+    @media (max-width: 640px) {
+      .header { padding: 0 16px; }
+      .main { padding: 24px 16px 60px; }
+      .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+      .bottom-grid { grid-template-columns: 1fr; }
+      .funnel-row { grid-template-columns: 1fr; gap: 6px; }
+      .funnel-label { font-size: 11px; }
+      .since-label { display: none; }
+      .section { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-brand">
+    GARAGE <span>DETAILING</span>
+    <span class="badge">ADMIN</span>
+  </div>
+  <div class="header-right">
+    <span class="since-label" id="since-label">—</span>
+    <button class="btn-reset" onclick="loadAndRender()"><i class="fas fa-sync-alt"></i> Refresh</button>
+  </div>
+</header>
+
+<main class="main">
+  <div class="page-title">Analytics Dashboard &mdash; garagedetailingkc.com</div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+      <div class="card-value" id="s-opens">0</div>
+      <div class="card-label">Form Opens</div>
+      <div class="last-updated" id="s-updated"></div>
+    </div>
+    <div class="card">
+      <div class="card-icon gold"><i class="fas fa-paper-plane"></i></div>
+      <div class="card-value" id="s-submitted">0</div>
+      <div class="card-label">Quotes Submitted</div>
+    </div>
+    <div class="card">
+      <div class="card-icon green"><i class="fas fa-percent"></i></div>
+      <div class="card-value" id="s-rate">—</div>
+      <div class="card-label">Conversion Rate</div>
+    </div>
+    <div class="card">
+      <div class="card-icon"><i class="fas fa-phone"></i></div>
+      <div class="card-value" id="s-calls">0</div>
+      <div class="card-label">Call Clicks</div>
+    </div>
+  </div>
+
+  <!-- LEAD FORM FUNNEL -->
+  <div class="section">
+    <div class="section-head"><i class="fas fa-filter"></i> Lead Form Funnel</div>
+    <div id="funnel-container">
+      <div class="empty"><i class="fas fa-chart-bar"></i>No form data yet. Submit a test lead to start tracking.</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM GRID -->
+  <div class="bottom-grid">
+
+    <!-- CLICK TO CALL -->
+    <div class="section">
+      <div class="section-head"><i class="fas fa-phone"></i> Click to Call</div>
+      <div id="call-container">
+        <div class="empty"><i class="fas fa-mobile-alt"></i>No call clicks tracked yet.</div>
+      </div>
+    </div>
+
+    <!-- CONTACT FORM -->
+    <div class="section">
+      <div class="section-head"><i class="fas fa-envelope"></i> Contact Page Form</div>
+      <div id="contact-container">
+        <div class="empty"><i class="fas fa-envelope-open"></i>No contact submissions yet.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note"><i class="fas fa-chart-bar"></i> Live data — updates every 30 seconds across all visitors and devices.</p>
+</main>
+
+<script>
+  function pct(val, base) {
+    return base > 0 ? Math.round(val / base * 100) : 0;
+  }
+
+  async function loadAndRender() {
+    try {
+      const res = await fetch('/api/stats', { cache: 'no-store' });
+      const d = await res.json();
+      const s = d.stats || {};
+      render(s);
+      document.getElementById('s-updated') && (document.getElementById('s-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString());
+    } catch(e) {
+      console.error('Stats fetch failed', e);
+    }
+  }
+
+  function render(s) {
+    const opens   = s.form_open || 0;
+    const s2      = s.step2 || 0;
+    const s3      = s.step3 || 0;
+    const s4      = s.step4 || 0;
+    const done    = s.submit || 0;
+    const contact = s.contact_submit || 0;
+    const mobile  = s.call_mobile || 0;
+    const desktop = s.call_desktop || 0;
+    const totalCalls = mobile + desktop;
+    const convRate  = pct(done, opens);
+
+    /* Header */
+
+    /* Summary cards */
+    document.getElementById('s-opens').textContent     = opens;
+    document.getElementById('s-submitted').textContent = done;
+    document.getElementById('s-rate').textContent      = opens > 0 ? convRate + '%' : '—';
+    document.getElementById('s-calls').textContent     = totalCalls;
+
+    /* Funnel */
+    if (opens > 0) {
+      const steps = [
+        { label:'Form Opened',          icon:'fa-file-signature', count: opens, final: false },
+        { label:'Service Selected',     icon:'fa-spray-can',      count: s2,    final: false },
+        { label:'Timeline Selected',    icon:'fa-calendar-alt',   count: s3,    final: false },
+        { label:'Contact Info Entered', icon:'fa-user',           count: s4,    final: false },
+        { label:'Quote Submitted',      icon:'fa-check-circle',   count: done,  final: true  },
+      ];
+      document.getElementById('funnel-container').innerHTML = steps.map((step, i) => {
+        const barW   = pct(step.count, opens);
+        const prev   = i === 0 ? opens : steps[i-1].count;
+        const dropped = i === 0 ? 0 : Math.max(0, prev - step.count);
+        const dropPct = pct(dropped, prev);
+        return `
+          <div class="funnel-row">
+            <div class="funnel-label ${step.final ? 'final' : ''}"><i class="fas ${step.icon}"></i>${step.label}</div>
+            <div class="funnel-bar-track"><div class="funnel-bar ${step.final ? 'final' : ''}" style="width:${barW}%"></div></div>
+            <div class="funnel-meta">
+              <span class="funnel-count">${step.count}</span>
+              <span class="funnel-pct">${barW}%</span>
+              ${i > 0 && dropped > 0 ? `<span class="funnel-drop">&#x25BC; ${dropped} (${dropPct}%)</span>` : '<span></span>'}
+            </div>
+          </div>
+          ${i < steps.length - 1 ? '<hr class="funnel-divider">' : ''}
+        `;
+      }).join('');
+    }
+
+    /* Call tracking */
+    if (totalCalls > 0) {
+      const maxCalls = Math.max(mobile, desktop, 1);
+      document.getElementById('call-container').innerHTML = `
+        <div class="call-row">
+          <div class="call-info">
+            <span class="call-device"><i class="fas fa-mobile-alt"></i> Mobile</span>
+            <span class="call-num">${mobile}</span>
+          </div>
+          <div class="call-track"><div class="call-fill" style="width:${pct(mobile, maxCalls)}%"></div></div>
+        </div>
+        <div class="call-row">
+          <div class="call-info">
+            <span class="call-device"><i class="fas fa-desktop"></i> Desktop</span>
+            <span class="call-num">${desktop}</span>
+          </div>
+          <div class="call-track"><div class="call-fill" style="width:${pct(desktop, maxCalls)}%"></div></div>
+        </div>
+        <div class="call-total">
+          <span>Total Call Clicks</span>
+          <strong>${totalCalls}</strong>
+        </div>
+      `;
+    }
+
+    /* Contact form */
+    if (contact > 0) {
+      document.getElementById('contact-container').innerHTML = `
+        <div class="big-num">${contact}</div>
+        <div class="big-sub">Contact Form Submissions</div>
+      `;
+    }
+  }
+
+  loadAndRender();
+  setInterval(loadAndRender, 30000);
+</script>
+
+</body>
+</html>
