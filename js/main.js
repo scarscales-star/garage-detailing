@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function track(key, subkey) {
     const map = { formOpens:'form_open', submitted:'submit', contactSubmits:'contact_submit' };
     const event = key === 'callClicks' ? 'call_' + (subkey || 'click') : (map[key] || key);
-    fetch('/api/track', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({event}) }).catch(()=>{});
+    fetch('/api/track', { method:'POST', keepalive:true, headers:{'Content-Type':'application/json'}, body:JSON.stringify({event}) }).catch(()=>{});
   }
 
   function openModal(preselect) {

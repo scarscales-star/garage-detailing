@@ -329,12 +329,37 @@
     return base > 0 ? Math.round(val / base * 100) : 0;
   }
 
+  async function migrateLocalStorage(apiStats) {
+    if (localStorage.getItem('gd_migrated')) return;
+    const local = JSON.parse(localStorage.getItem('gd_analytics') || '{}');
+    if (!local.formOpens && !local.submitted) return; // nothing to migrate
+    const apiHasData = Object.values(apiStats).some(v => v > 0);
+    if (apiHasData) { localStorage.setItem('gd_migrated', '1'); return; }
+    const seeds = {
+      form_open:       local.formOpens  || 0,
+      step2:           local.step2      || 0,
+      step3:           local.step3      || 0,
+      step4:           local.step4      || 0,
+      submit:          local.submitted  || 0,
+      contact_submit:  local.contactSubmits || 0,
+      call_mobile:     (local.callClicks && local.callClicks.mobile)  || 0,
+      call_desktop:    (local.callClicks && local.callClicks.desktop) || 0,
+    };
+    await Promise.all(Object.entries(seeds).filter(([,v]) => v > 0).map(([k, v]) =>
+      fetch(`https://api.countapi.xyz/update/gdkc-pro/${k}?amount=${v}`).catch(() => {})
+    ));
+    localStorage.setItem('gd_migrated', '1');
+  }
+
   async function loadAndRender() {
     try {
       const res = await fetch('/api/stats', { cache: 'no-store' });
       const d = await res.json();
       const s = d.stats || {};
-      render(s);
+      await migrateLocalStorage(s);
+      // Re-fetch after possible migration so numbers are up to date
+      const fresh = await fetch('/api/stats', { cache: 'no-store' }).then(r => r.json()).catch(() => d);
+      render(fresh.stats || s);
       document.getElementById('s-updated') && (document.getElementById('s-updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString());
     } catch(e) {
       console.error('Stats fetch failed', e);
