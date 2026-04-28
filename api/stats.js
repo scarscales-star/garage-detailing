@@ -1,5 +1,4 @@
 // GET /api/stats  → { configured: true, stats: { ... } }
-// Uses CountAPI (countapi.xyz) — no setup, no env vars required.
 const NS = 'gdkc-pro';
 const KEYS = ['form_open','step2','step3','step4','submit','contact_submit','call_mobile','call_desktop'];
 
@@ -11,9 +10,9 @@ module.exports = async function handler(req, res) {
   try {
     const results = await Promise.all(
       KEYS.map(k =>
-        fetch(`https://api.countapi.xyz/get/${NS}/${k}`)
+        fetch(`https://api.counterapi.dev/v1/${NS}/${k}/`)
           .then(r => r.json())
-          .then(d => [k, typeof d.value === 'number' ? d.value : 0])
+          .then(d => [k, Number(d.count) || 0])
           .catch(() => [k, 0])
       )
     );
