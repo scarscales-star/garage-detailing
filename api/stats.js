@@ -10,7 +10,7 @@ module.exports = async function handler(req, res) {
   try {
     const results = await Promise.all(
       KEYS.map(k =>
-        fetch(`https://api.counterapi.dev/v1/${NS}/${k}/`)
+        fetch(`https://api.counterapi.dev/v1/${NS}/${k}/?_=${Date.now()}`, { cache: 'no-store' })
           .then(r => r.json())
           .then(d => [k, Number(d.count) || 0])
           .catch(() => [k, 0])

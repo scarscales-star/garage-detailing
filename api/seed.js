@@ -17,7 +17,7 @@ module.exports = async function handler(req, res) {
 
   try {
     // Get current count first
-    const cur = await fetch(`https://api.counterapi.dev/v1/${NS}/${key}/`)
+    const cur = await fetch(`https://api.counterapi.dev/v1/${NS}/${key}/?_=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json()).then(d => Number(d.count) || 0).catch(() => 0);
 
     const diff = value - cur;
@@ -32,7 +32,7 @@ module.exports = async function handler(req, res) {
       ));
     }
 
-    const final = await fetch(`https://api.counterapi.dev/v1/${NS}/${key}/`)
+    const final = await fetch(`https://api.counterapi.dev/v1/${NS}/${key}/?_=${Date.now()}`, { cache: 'no-store' })
       .then(r => r.json()).then(d => Number(d.count) || 0).catch(() => 0);
 
     return res.json({ ok: true, count: final });
